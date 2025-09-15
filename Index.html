@@ -1,213 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portile0Social Games</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 30px;
-      /* Dark purple to faded dark blue vertical gradient */
-      background: linear-gradient(to bottom, #560a7f, #230535);
-      color: #fff; /* White text for contrast */
-      min-height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portile0Social Games</title>
+<style>
+  /* General Body & Text */
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(to bottom, #560a7f, #230535);
+    color: #fff;
+    min-height: 100vh;
+    transition: all 0.3s;
+  }
+  h1 { margin-bottom: 20px; font-size: 2.5rem; }
+  
+  /* Search Bar */
+  #searchBar {
+    width: 60%;
+    max-width: 400px;
+    padding: 12px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    transition: all 0.3s;
+  }
+  #searchBar::placeholder {
+    color: var(--placeholder-color, rgba(255,255,255,0.6));
+    transition: color 0.3s;
+  }
+  
+  /* Multi-search instructions */
+  #EXMU {
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: inherit;
+  }
 
-    h1 {
-      color: #fff;
-      margin-bottom: 20px;
-    }
+  /* Game container */
+  .game-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  .game {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, color 0.3s, box-shadow 0.3s;
+    width: 160px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+  }
+  .game:hover {
+    transform: translateY(-6px);
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+  .game-title { margin-top: 8px; font-size: 16px; }
 
-    #searchBar {
-      width: 60%;
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: none;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-    }
+  #noResults { margin-top: 20px; font-size:16px; color:#ff6b6b; }
 
-    #searchBar::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
+  /* Settings Modal */
+  #settingsModal {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.75);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+  }
+  #settingsModal .modal-content {
+    background: linear-gradient(to bottom, #2a0d3a, #1a0b2f);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    transition: all 0.3s;
+  }
+  #settingsModal h2 {
+    text-align:center;
+    margin-bottom:20px;
+    background: linear-gradient(to right, #7b1fa2, #2196f3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 28px;
+  }
+  #settingsModal label { font-weight: bold; margin-top: 10px; display:block; }
+  #settingsModal input[type="color"],
+  #settingsModal input[type="file"],
+  #settingsModal select,
+  #settingsModal input[type="range"] {
+    width: 100%;
+    margin: 8px 0 15px 0;
+    padding: 8px;
+    border-radius: 8px;
+    border:none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size:14px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  #settingsModal input[type="file"]::-webkit-file-upload-button {
+    background: #7b1fa2;
+    color:#fff;
+    border:none;
+    padding: 8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    transition: all 0.3s;
+  }
+  #settingsModal button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+    transition: all 0.3s;
+  }
+  #settingsModal #saveSettings {
+    background: linear-gradient(to right, #7b1fa2, #2196f3);
+    color:#fff;
+  }
+  #settingsModal #closeSettings {
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+  }
 
-    #EXMU {
-      margin-bottom: 20px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.5;
-    }
-
-    .game-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .game {
-      background: rgba(255, 255, 255, 0.05); /* subtle dark card */
-      padding: 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
-      width: 150px;
-      color: #fff;
-    }
-
-    .game:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .game-title {
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    #noResults {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #ff6b6b;
-    }
-  </style>
+  /* Responsive */
+  @media(max-width:600px){
+    #searchBar { width: 90%; }
+    .game { width: 45%; min-height:80px; }
+  }
+</style>
 </head>
 <body>
-  <h1>Portile0Social Games</h1>
-  <input type="text" id="searchBar" placeholder="Search games..." onkeyup="filterGames()">
-  <p id="EXMU">To use multi-search, type the games you want separated by commas.<br>Example: Game 1, Game 2</p>
 
-  <div class="game-container" id="gamesList">
-    <div class="game" onclick="openGame('https://vertexiii.github.io/game1.html')">
-      <div class="game-title">Game 1</div>
-    </div>
-    <div class="game" onclick="openGame('https://vertexiii.github.io/game2.html')">
-      <div class="game-title">Game 2</div>
-    </div>
-    <div class="game" onclick="openGame('https://vertexiii.github.io/game3.html')">
-      <div class="game-title">Game 3</div>
-    </div>
-<div class="game" onclick="openSettings()">
-  <div class="game-title">Settings</div>
+<h1>Portile0Social Games</h1>
+<input type="text" id="searchBar" placeholder="Search games..." onkeyup="filterGames()">
+<p id="EXMU">Use multi-search by typing multiple games separated by commas.<br>Example: Game 1, Game 2</p>
+
+<div class="game-container" id="gamesList">
+  <div class="game" onclick="openGame('https://vertexiii.github.io/game1.html')"><div class="game-title">Game 1</div></div>
+  <div class="game" onclick="openGame('https://vertexiii.github.io/game2.html')"><div class="game-title">Game 2</div></div>
+  <div class="game" onclick="openGame('https://vertexiii.github.io/game3.html')"><div class="game-title">Game 3</div></div>
+  <div class="game" onclick="openSettings()"><div class="game-title">Settings</div></div>
 </div>
 
-    <!-- Add more games here -->
-  </div>
+<script>
+// Open games
+function openGame(url){ window.open(url,"_blank"); }
 
-  <script>
-    function openGame(url) {
-      window.open(url, "_blank");
+// Multi-search filter
+function filterGames() {
+  const query = document.getElementById('searchBar').value.toLowerCase();
+  const games = document.getElementById('gamesList').getElementsByClassName('game');
+  const words = query.split(",").map(word => word.trim()).filter(Boolean);
+  let anyMatch = false;
+
+  for (let i = 0; i < games.length; i++) {
+    const title = games[i].querySelector('.game-title').innerText.toLowerCase();
+
+    // Hide settings by default
+    if (title === "settings") {
+      games[i].style.display = "none";
+      // Show settings only if query includes "s" or "settings"
+      if (words.some(word => word.startsWith("s"))) games[i].style.display = '';
+      continue;
     }
 
-    function openSettings() {
-  const modal = document.createElement('div');
-  modal.id = "settingsModal";
-  modal.style.position = "fixed";
-  modal.style.top = 0;
-  modal.style.left = 0;
-  modal.style.width = "100%";
-  modal.style.height = "100%";
-  modal.style.background = "rgba(0,0,0,0.7)";
-  modal.style.display = "flex";
-  modal.style.alignItems = "center";
-  modal.style.justifyContent = "center";
-  modal.style.zIndex = 1000;
+    let match = words.length === 0 || words.some(word => title.includes(word));
+    games[i].style.display = match ? '' : 'none';
+    if (match) anyMatch = true;
+  }
 
-  modal.innerHTML = `
-    <div style="background:#1a0b2f; padding:20px; border-radius:10px; width:320px; text-align:left; color:#fff; font-family:Arial;">
-      <h2 style="text-align:center;">Settings</h2>
-      
-      <label>Background Gradient:</label><br>
-      Color 1: <input type="color" id="bgColor1" value="#560a7f" style="width:45%;"> 
-      Color 2: <input type="color" id="bgColor2" value="#230535" style="width:45%;"><br><br>
-
-      <label>Or Upload Background Image:</label><br>
-      <input type="file" id="bgImage" accept="image/*" style="width:100%; margin-bottom:10px;"><br>
-
-      <label>Font Family:</label><br>
-      <select id="fontSelect" style="width:100%; margin-bottom:10px;">
-        <option value="Arial, sans-serif">Arial</option>
-        <option value="Verdana, sans-serif">Verdana</option>
-        <option value="Georgia, serif">Georgia</option>
-        <option value="Tahoma, sans-serif">Tahoma</option>
-        <option value="Courier New, monospace">Courier New</option>
-      </select><br>
-
-      <label>Font Size:</label><br>
-      <input type="range" id="fontSize" min="12" max="30" value="16" style="width:100%;"><br>
-      <span id="fontSizeValue" style="text-align:center; display:block;">16px</span>
-
-      <button id="saveSettings" style="width:100%; padding:10px; margin-top:10px; cursor:pointer;">Apply</button>
-      <button id="closeSettings" style="width:100%; padding:10px; margin-top:5px; cursor:pointer;">Close</button>
-    </div>
-  `;
-
-  document.body.appendChild(modal);
-
-  const fontSlider = document.getElementById('fontSize');
-  const fontValue = document.getElementById('fontSizeValue');
-  fontSlider.oninput = () => fontValue.innerText = fontSlider.value + "px";
-
-  document.getElementById('closeSettings').onclick = () => modal.remove();
-
-  document.getElementById('saveSettings').onclick = () => {
-    // Background
-    const imgFile = document.getElementById('bgImage').files[0];
-    if (imgFile) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        document.body.style.background = `url(${e.target.result}) no-repeat center center fixed`;
-        document.body.style.backgroundSize = "cover";
-      };
-      reader.readAsDataURL(imgFile);
-    } else {
-      const color1 = document.getElementById('bgColor1').value;
-      const color2 = document.getElementById('bgColor2').value;
-      document.body.style.background = `linear-gradient(to bottom, ${color1}, ${color2})`;
-    }
-
-    // Font
-    const font = document.getElementById('fontSelect').value;
-    document.body.style.fontFamily = font;
-
-    // Font Size (exclude Settings modal itself)
-    const size = fontSlider.value;
-    document.querySelectorAll('body > *:not(#settingsModal)').forEach(el => {
-      el.style.fontSize = size + "px";
-    });
-  };
+  document.getElementById('noResults')?.remove();
+  if (!anyMatch && words.length > 0) {
+    const p = document.createElement('p');
+    p.id = "noResults";
+    p.innerText = "No games found!";
+    document.body.appendChild(p);
+  }
 }
 
 
+// Canvas for text brightness detection
+let canvas, ctx;
+function initCanvas(){ canvas=document.createElement('canvas'); ctx=canvas.getContext('2d'); }
 
-    function filterGames() {
-      const query = document.getElementById('searchBar').value.toLowerCase();
-      const games = document.getElementById('gamesList').getElementsByClassName('game');
-      const words = query.split(",").map(word => word.trim()).filter(Boolean);
+function getAverageBrightness(img){
+  canvas.width=img.width; canvas.height=img.height;
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  let total=0;
+  for(let i=0;i<data.length;i+=4){
+    total += (data[i]*299 + data[i+1]*587 + data[i+2]*114)/1000;
+  }
+  return total/(data.length/4);
+}
 
-      let anyMatch = false;
+function applyTextColor(color){
+  document.querySelectorAll("body > *:not(#settingsModal)").forEach(el=>el.style.color=color);
+  document.getElementById("EXMU").style.color=color;
+  document.querySelectorAll(".game").forEach(el=>{
+    el.style.background = color=="#fff" ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.05)";
+    el.style.color=color;
+  });
+  const searchBar = document.getElementById("searchBar");
+  searchBar.style.background = color=="#fff" ? "rgba(0,0,0,0.2)" : "rgba(255,255,255,0.1)";
+  searchBar.style.color = color;
+  searchBar.style.setProperty('--placeholder-color', color === "#fff" ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)");
+}
 
-      for (let i = 0; i < games.length; i++) {
-        const title = games[i].querySelector('.game-title').innerText.toLowerCase();
-        let match = words.length === 0 || words.some(word => title.includes(word));
-        games[i].style.display = match ? '' : 'none';
-        if (match) anyMatch = true;
-      }
-
-      // Show no results message
-      document.getElementById('noResults')?.remove();
-      if (!anyMatch && words.length > 0) {
-        const p = document.createElement('p');
-        p.id = "noResults";
-        p.innerText = "No games found!";
-        document.body.appendChild(p);
-      }
+function updateTextColor(){
+  const bg = getComputedStyle(document.body).backgroundImage;
+  if(bg.includes("url(")){
+    const url = bg.match(/url\("?(.*?)"?\)/)[1];
+    const img = new Image();
+    img.crossOrigin="Anonymous";
+    img.src = url;
+    img.onload=()=> applyTextColor(getAverageBrightness(img)>180?"#000":"#fff");
+  } else {
+    const colors=document.body.style.background.match(/#([0-9a-f]{3,6})/gi);
+    let color="#fff";
+    if(colors && colors.length>=2){
+      function getBrightness(hex){ hex=hex.replace("#",""); const r=parseInt(hex.substring(0,2),16); const g=parseInt(hex.substring(2,4),16); const b=parseInt(hex.substring(4,6),16); return (r*299+g*587+b*114)/1000;}
+      const avgBrightness=(getBrightness(colors[0])+getBrightness(colors[1]))/2;
+      color=avgBrightness>180?"#000":"#fff";
     }
-  </script>
+    applyTextColor(color);
+  }
+}
+
+function adjustColor(hex){
+  hex=hex.replace("#","");
+  let r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+  const brightness=(r*299+g*587+b*114)/1000;
+  if(brightness>230){ r=Math.max(0,r-20); g=Math.max(0,g-20); b=Math.max(0,b-20);}
+  else if(brightness<25){ r=Math.min(255,r+20); g=Math.min(255,g+20); b=Math.min(255,b+20);}
+  return "#"+r.toString(16).padStart(2,"0")+g.toString(16).padStart(2,"0")+b.toString(16).padStart(2,"0");
+}
+
+// Settings Modal
+function openSettings(){
+  const modal=document.createElement('div'); modal.id="settingsModal";
+  modal.innerHTML=`
+  <div class="modal-content">
+    <h2>Settings</h2>
+    <label>Theme Presets:</label>
+    <select id="presetSelect">
+      <option value="default">Default</option>
+      <option value="rainy">Rainy</option>
+      <option value="forest">Forest</option>
+      <option value="ocean">Ocean</option>
+      <option value="beach">Beach</option>
+    </select>
+    <label>Custom Background Gradient:</label>
+    Color 1: <input type="color" id="bgColor1" value="#560a7f"> 
+    Color 2: <input type="color" id="bgColor2" value="#230535"><br>
+    <label>Or Upload Background Image:</label>
+    <input type="file" id="bgImage" accept="image/*"><br>
+    <label>Font Family:</label>
+    <select id="fontSelect">
+      <option value="Arial, sans-serif">Arial</option>
+      <option value="Verdana, sans-serif">Verdana</option>
+      <option value="Georgia, serif">Georgia</option>
+      <option value="Tahoma, sans-serif">Tahoma</option>
+      <option value="Courier New, monospace">Courier New</option>
+    </select>
+    <label>Font Size:</label>
+    <input type="range" id="fontSize" min="12" max="30" value="16">
+    <span id="fontSizeValue" style="display:block;text-align:center;">16px</span>
+    <button id="saveSettings">Apply</button>
+    <button id="closeSettings">Close</button>
+  </div>`;
+  document.body.appendChild(modal);
+
+  const fontSlider=document.getElementById('fontSize');
+  const fontValue=document.getElementById('fontSizeValue');
+  fontSlider.oninput=()=>fontValue.innerText=fontSlider.value+"px";
+
+  const presetSelect=document.getElementById('presetSelect');
+  presetSelect.onchange=()=>{
+    const presets={
+      default:["#560a7f","#230535"],
+      rainy:["#4a148c","#0d47a1"],
+      forest:["#1b5e20","#2e7d32"],
+      ocean:["#006064","#004d40"],
+      beach:["#ff8f00","#f57f17"]
+    };
+    if(presetSelect.value in presets){
+      document.body.style.background=`linear-gradient(to bottom, ${presets[presetSelect.value][0]}, ${presets[presetSelect.value][1]})`;
+      updateTextColor();
+    }
+  };
+
+  const bg1=document.getElementById('bgColor1');
+  const bg2=document.getElementById('bgColor2');
+  bg1.addEventListener('input', e=> e.target.value=adjustColor(e.target.value));
+  bg2.addEventListener('input', e=> e.target.value=adjustColor(e.target.value));
+
+  document.getElementById('saveSettings').onclick=()=>{
+    const c1=bg1.value, c2=bg2.value, file=document.getElementById('bgImage').files[0];
+    if(file){
+      const reader=new FileReader();
+      reader.onload=e=>{ document.body.style.background=`url(${e.target.result}) no-repeat center/cover`; updateTextColor(); };
+      reader.readAsDataURL(file);
+    } else document.body.style.background=`linear-gradient(to bottom, ${c1}, ${c2})`;
+    document.body.style.fontFamily=document.getElementById('fontSelect').value;
+    document.body.style.fontSize=document.getElementById('fontSize').value+"px";
+    updateTextColor();
+  };
+
+  document.getElementById('closeSettings').onclick=()=>modal.remove();
+}
+
+// Initialize
+initCanvas();
+updateTextColor();
+</script>
 </body>
 </html>
