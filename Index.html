@@ -9,9 +9,9 @@
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 30px;
-    /* Purple to bluish gradient */
-    background: linear-gradient(135deg, #8e44ad, #3498db);
-    color: #fff; /* Make text white for contrast */
+    /* Dark purple to faded dark blue vertical gradient */
+    background: linear-gradient(to bottom, #2c003e, #1a1f4b);
+    color: #fff; /* White text for contrast */
     min-height: 100vh;
   }
 
@@ -27,6 +27,12 @@
     margin-bottom: 30px;
     border-radius: 5px;
     border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  #searchBar::placeholder {
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .game-container {
@@ -37,7 +43,7 @@
   }
 
   .game {
-    background: rgba(255, 255, 255, 0.1); /* translucent card effect */
+    background: rgba(255, 255, 255, 0.05); /* subtle dark card */
     padding: 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -48,7 +54,7 @@
 
   .game:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .game-title {
