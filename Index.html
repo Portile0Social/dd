@@ -3,45 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fun Games</title>
+  <title>Portile0Social Games</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-    button { font-size: 18px; padding: 10px 20px; cursor: pointer; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    #searchBar {
+      width: 60%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .game {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+      width: 150px;
+    }
+
+    .game:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+    }
+
+    .game-title {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to Fun Games!</h1>
-  <button id="openTabBtn">Open Game Tab</button>
+  <h1>Portile0Social Games</h1>
+  <input type="text" id="searchBar" placeholder="Search games..." onkeyup="filterGames()">
+
+  <div class="game-container" id="gamesList">
+    <div class="game" onclick="openGame('https://vertexiii.github.io/game1.html')">
+      <div class="game-title">Game 1</div>
+    </div>
+    <div class="game" onclick="openGame('https://vertexiii.github.io/game2.html')">
+      <div class="game-title">Game 2</div>
+    </div>
+    <div class="game" onclick="openGame('https://vertexiii.github.io/game3.html')">
+      <div class="game-title">Game 3</div>
+    </div>
+    <!-- Add more games here -->
+  </div>
 
   <script>
-    const btn = document.getElementById('openTabBtn');
-    btn.addEventListener('click', () => {
-      const gameTab = window.open('about:blank', '_blank');
-      if (gameTab) {
-        gameTab.document.write(`
-          <html>
-          <head>
-            <title>Vertex 3 Games</title>
-            <style>
-              body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-              h1 { color: #2c3e50; }
-              button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
-            </style>
-          </head>
-          <body>
-            <h1>Vertex 3 Games</h1>
-            <button onclick="window.location.href='https://vertexiii.github.io/game1.html'">Game 1</button>
-            <button onclick="window.location.href='https://vertexiii.github.io/game2.html'">Game 2</button>
-            <button onclick="window.location.href='https://vertexiii.github.io/game3.html'">Game 3</button>
-            <!-- Add more buttons for other games -->
-          </body>
-          </html>
-        `);
-        gameTab.document.close();
-      } else {
-        alert('Pop-up blocked! Please allow pop-ups for this site.');
+    function openGame(url) {
+      window.open(url, "_blank");
+    }
+
+    function filterGames() {
+      const query = document.getElementById('searchBar').value.toLowerCase();
+      const games = document.getElementById('gamesList').getElementsByClassName('game');
+
+      for (let i = 0; i < games.length; i++) {
+        const title = games[i].querySelector('.game-title').innerText.toLowerCase();
+        games[i].style.display = title.includes(query) ? '' : 'none';
       }
-    });
+    }
   </script>
 </body>
 </html>
