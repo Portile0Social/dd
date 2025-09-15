@@ -119,14 +119,29 @@
   modal.style.zIndex = 1000;
 
   modal.innerHTML = `
-    <div style="background:#1a0b2f; padding:20px; border-radius:10px; width:300px; text-align:left; color:#fff;">
+    <div style="background:#1a0b2f; padding:20px; border-radius:10px; width:320px; text-align:left; color:#fff; font-family:Arial;">
       <h2 style="text-align:center;">Settings</h2>
-      <label>Background Gradient:</label>
-      <input type="text" id="bgInput" placeholder="e.g., #560a7f,#230535" style="width:100%; margin-bottom:10px;">
-      <label>Font Family:</label>
-      <input type="text" id="fontInput" placeholder="e.g., Arial, sans-serif" style="width:100%; margin-bottom:10px;">
-      <label>Font Size (px):</label>
-      <input type="number" id="sizeInput" placeholder="16" style="width:100%; margin-bottom:10px;">
+      
+      <label>Background Gradient:</label><br>
+      Color 1: <input type="color" id="bgColor1" value="#560a7f" style="width:45%;"> 
+      Color 2: <input type="color" id="bgColor2" value="#230535" style="width:45%;"><br><br>
+
+      <label>Or Upload Background Image:</label><br>
+      <input type="file" id="bgImage" accept="image/*" style="width:100%; margin-bottom:10px;"><br>
+
+      <label>Font Family:</label><br>
+      <select id="fontSelect" style="width:100%; margin-bottom:10px;">
+        <option value="Arial, sans-serif">Arial</option>
+        <option value="Verdana, sans-serif">Verdana</option>
+        <option value="Georgia, serif">Georgia</option>
+        <option value="Tahoma, sans-serif">Tahoma</option>
+        <option value="Courier New, monospace">Courier New</option>
+      </select><br>
+
+      <label>Font Size:</label><br>
+      <input type="range" id="fontSize" min="12" max="30" value="16" style="width:100%;"><br>
+      <span id="fontSizeValue" style="text-align:center; display:block;">16px</span>
+
       <button id="saveSettings" style="width:100%; padding:10px; margin-top:10px; cursor:pointer;">Apply</button>
       <button id="closeSettings" style="width:100%; padding:10px; margin-top:5px; cursor:pointer;">Close</button>
     </div>
@@ -134,19 +149,40 @@
 
   document.body.appendChild(modal);
 
+  const fontSlider = document.getElementById('fontSize');
+  const fontValue = document.getElementById('fontSizeValue');
+  fontSlider.oninput = () => fontValue.innerText = fontSlider.value + "px";
+
   document.getElementById('closeSettings').onclick = () => modal.remove();
 
   document.getElementById('saveSettings').onclick = () => {
-    const bg = document.getElementById('bgInput').value.split(',');
-    if(bg.length === 2) {
-      document.body.style.background = `linear-gradient(to bottom, ${bg[0]}, ${bg[1]})`;
+    // Background
+    const imgFile = document.getElementById('bgImage').files[0];
+    if (imgFile) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.body.style.background = `url(${e.target.result}) no-repeat center center fixed`;
+        document.body.style.backgroundSize = "cover";
+      };
+      reader.readAsDataURL(imgFile);
+    } else {
+      const color1 = document.getElementById('bgColor1').value;
+      const color2 = document.getElementById('bgColor2').value;
+      document.body.style.background = `linear-gradient(to bottom, ${color1}, ${color2})`;
     }
-    const font = document.getElementById('fontInput').value.trim();
-    if(font) document.body.style.fontFamily = font;
-    const size = parseInt(document.getElementById('sizeInput').value);
-    if(size) document.body.style.fontSize = size + 'px';
+
+    // Font
+    const font = document.getElementById('fontSelect').value;
+    document.body.style.fontFamily = font;
+
+    // Font Size (exclude Settings modal itself)
+    const size = fontSlider.value;
+    document.querySelectorAll('body > *:not(#settingsModal)').forEach(el => {
+      el.style.fontSize = size + "px";
+    });
   };
 }
+
 
 
     function filterGames() {
