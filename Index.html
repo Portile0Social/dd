@@ -5,69 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portile0Social Games</title>
   <style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 30px;
-    /* Dark purple to faded dark blue vertical gradient */
-    background: linear-gradient(to bottom, #560a7f, #230535);
-    color: #fff; /* White text for contrast */
-    min-height: 100vh;
-  }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+      /* Dark purple to faded dark blue vertical gradient */
+      background: linear-gradient(to bottom, #560a7f, #230535);
+      color: #fff; /* White text for contrast */
+      min-height: 100vh;
+    }
 
-  h1 {
-    color: #fff;
-    margin-bottom: 20px;
-  }
+    h1 {
+      color: #fff;
+      margin-bottom: 20px;
+    }
 
-  #searchBar {
-    width: 60%;
-    padding: 10px;
-    font-size: 16px;
-    margin-bottom: 30px;
-    border-radius: 5px;
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-  }
+    #searchBar {
+      width: 60%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
 
-  #searchBar::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
+    #searchBar::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
 
-  .game-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
+    #EXMU {
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.5;
+    }
 
-  .game {
-    background: rgba(255, 255, 255, 0.05); /* subtle dark card */
-    padding: 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-    width: 150px;
-    color: #fff;
-  }
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
 
-  .game:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1);
-  }
+    .game {
+      background: rgba(255, 255, 255, 0.05); /* subtle dark card */
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      width: 150px;
+      color: #fff;
+    }
 
-  .game-title {
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 16px;
-  }
-</style>
+    .game:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+    }
 
+    .game-title {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    #noResults {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #ff6b6b;
+    }
+  </style>
 </head>
 <body>
   <h1>Portile0Social Games</h1>
   <input type="text" id="searchBar" placeholder="Search games..." onkeyup="filterGames()">
+  <p id="EXMU">To use multi-search, type the games you want separated by commas.<br>Example: Game 1, Game 2</p>
 
   <div class="game-container" id="gamesList">
     <div class="game" onclick="openGame('https://vertexiii.github.io/game1.html')">
@@ -83,29 +96,33 @@
   </div>
 
   <script>
-function openGame(url) {
-  window.open(url, "_blank");
-}
+    function openGame(url) {
+      window.open(url, "_blank");
+    }
 
-// Simple fuzzy search
-function filterGames() {
-  const query = document.getElementById('searchBar').value.toLowerCase();
-  const games = document.getElementById('gamesList').getElementsByClassName('game');
+    function filterGames() {
+      const query = document.getElementById('searchBar').value.toLowerCase();
+      const games = document.getElementById('gamesList').getElementsByClassName('game');
+      const words = query.split(",").map(word => word.trim()).filter(Boolean);
 
-  for (let i = 0; i < games.length; i++) {
-    const title = games[i].querySelector('.game-title').innerText.toLowerCase();
+      let anyMatch = false;
 
-    // Split query into words
-    const words = query.split(" ").filter(Boolean);
+      for (let i = 0; i < games.length; i++) {
+        const title = games[i].querySelector('.game-title').innerText.toLowerCase();
+        let match = words.length === 0 || words.some(word => title.includes(word));
+        games[i].style.display = match ? '' : 'none';
+        if (match) anyMatch = true;
+      }
 
-    // Check if every word exists anywhere in the title
-    let match = words.every(word => title.includes(word));
-
-    // Show the game if it matches
-    games[i].style.display = match ? '' : 'none';
-  }
-}
-</script>
-
+      // Show no results message
+      document.getElementById('noResults')?.remove();
+      if (!anyMatch && words.length > 0) {
+        const p = document.createElement('p');
+        p.id = "noResults";
+        p.innerText = "No games found!";
+        document.body.appendChild(p);
+      }
+    }
+  </script>
 </body>
 </html>
