@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun Games</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    button { font-size: 18px; padding: 10px 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Fun Games!</h1>
+  <button id="openTabBtn">Open Game Tab</button>
+
+  <script>
+    const btn = document.getElementById('openTabBtn');
+    btn.addEventListener('click', () => {
+      const gameTab = window.open('about:blank', '_blank');
+      if (gameTab) {
+        gameTab.document.write(`
+          <html>
+          <head>
+            <title>Vertex 3 Games</title>
+            <style>
+              body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+              h1 { color: #2c3e50; }
+              button { margin: 10px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+            </style>
+          </head>
+          <body>
+            <h1>Vertex 3 Games</h1>
+            <button onclick="window.location.href='https://vertexiii.github.io/game1.html'">Game 1</button>
+            <button onclick="window.location.href='https://vertexiii.github.io/game2.html'">Game 2</button>
+            <button onclick="window.location.href='https://vertexiii.github.io/game3.html'">Game 3</button>
+            <!-- Add more buttons for other games -->
+          </body>
+          </html>
+        `);
+        gameTab.document.close();
+      } else {
+        alert('Pop-up blocked! Please allow pop-ups for this site.');
+      }
+    });
+  </script>
+</body>
+</html>
