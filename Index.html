@@ -83,19 +83,29 @@
   </div>
 
   <script>
-    function openGame(url) {
-      window.open(url, "_blank");
-    }
+function openGame(url) {
+  window.open(url, "_blank");
+}
 
-    function filterGames() {
-      const query = document.getElementById('searchBar').value.toLowerCase();
-      const games = document.getElementById('gamesList').getElementsByClassName('game');
+// Simple fuzzy search
+function filterGames() {
+  const query = document.getElementById('searchBar').value.toLowerCase();
+  const games = document.getElementById('gamesList').getElementsByClassName('game');
 
-      for (let i = 0; i < games.length; i++) {
-        const title = games[i].querySelector('.game-title').innerText.toLowerCase();
-        games[i].style.display = title.includes(query) ? '' : 'none';
-      }
-    }
-  </script>
+  for (let i = 0; i < games.length; i++) {
+    const title = games[i].querySelector('.game-title').innerText.toLowerCase();
+
+    // Split query into words
+    const words = query.split(" ").filter(Boolean);
+
+    // Check if every word exists anywhere in the title
+    let match = words.every(word => title.includes(word));
+
+    // Show the game if it matches
+    games[i].style.display = match ? '' : 'none';
+  }
+}
+</script>
+
 </body>
 </html>
