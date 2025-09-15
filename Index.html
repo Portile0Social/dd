@@ -3,105 +3,234 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portile0Social Games!</title>
+<title>Portile0Social Games</title>
 <style>
-  body { font-family: Arial, sans-serif; text-align: center; padding: 30px; background: linear-gradient(to bottom, #560a7f, #230535); color: #fff; min-height: 100vh; transition: all 0.3s; }
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(to bottom, #560a7f, #230535);
+    color: #fff;
+    min-height: 100vh;
+    transition: all 0.3s;
+  }
   h1 { margin-bottom: 20px; font-size: 2.5rem; }
-  #searchBar { width: 60%; max-width: 400px; padding: 12px; font-size: 16px; margin-bottom: 15px; border-radius: 10px; border: none; background: rgba(255,255,255,0.1); color: inherit; transition: all 0.3s; }
-  #searchBar::placeholder { color: var(--placeholder-color, rgba(255,255,255,0.6)); transition: color 0.3s; }
-  #EXMU { margin-bottom: 25px; font-size: 14px; line-height: 1.6; color: inherit; }
-  .game-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-  .game { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; cursor: pointer; transition: transform 0.2s, background 0.3s, color 0.3s, box-shadow 0.3s; width: 160px; min-height: 90px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-weight: bold; }
-  .game:hover { transform: translateY(-6px); background: rgba(255,255,255,0.15); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+  #searchBar {
+    width: 60%;
+    max-width: 400px;
+    padding: 12px;
+    font-size: 16px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    transition: all 0.3s;
+  }
+  #searchBar::placeholder {
+    color: var(--placeholder-color, rgba(255,255,255,0.6));
+    transition: color 0.3s;
+  }
+  #EXMU {
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: inherit;
+  }
+  .game-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  .game {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s, color 0.3s, box-shadow 0.3s;
+    width: 160px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+  }
+  .game:hover {
+    transform: translateY(-6px);
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
   .game-title { margin-top: 8px; font-size: 16px; }
   #noResults { margin-top: 20px; font-size:16px; color:#ff6b6b; }
-  #settingsModal { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.75); display:flex; justify-content:center; align-items:center; z-index:1000; }
-  #settingsModal .modal-content { background: linear-gradient(to bottom, #2a0d3a, #1a0b2f); padding: 30px; border-radius: 20px; width: 90%; max-width: 550px; color: #fff; font-family: Arial, sans-serif; box-shadow: 0 0 30px rgba(0,0,0,0.5); transition: all 0.3s; }
-  #settingsModal h2 { text-align:center; margin-bottom:20px; background: linear-gradient(to right, #7b1fa2, #2196f3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; }
+  #settingsModal {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.75);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+  }
+  #settingsModal .modal-content {
+    background: linear-gradient(to bottom, #2a0d3a, #1a0b2f);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 550px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    transition: all 0.3s;
+  }
+  #settingsModal h2 {
+    text-align:center;
+    margin-bottom:20px;
+    background: linear-gradient(to right, #7b1fa2, #2196f3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 28px;
+  }
   #settingsModal label { font-weight: bold; margin-top: 10px; display:block; }
-  #settingsModal input[type="color"], #settingsModal input[type="file"], #settingsModal select, #settingsModal input[type="range"] { width: 100%; margin: 8px 0 15px 0; padding: 8px; border-radius: 8px; border:none; background: rgba(255,255,255,0.1); color: #fff; font-size:14px; cursor: pointer; transition: all 0.3s; }
-  #settingsModal input[type="file"]::-webkit-file-upload-button { background: #7b1fa2; color:#fff; border:none; padding: 8px 12px; border-radius:5px; cursor:pointer; transition: all 0.3s; }
-  #settingsModal button { width: 100%; padding: 12px; margin-top: 10px; border:none; border-radius:8px; font-weight:bold; font-size:16px; cursor:pointer; transition: all 0.3s; }
-  #settingsModal #saveSettings { background: linear-gradient(to right, #7b1fa2, #2196f3); color:#fff; }
-  #settingsModal #closeSettings { background: rgba(255,255,255,0.1); color:#fff; }
-  @media(max-width:600px){ #searchBar { width: 90%; } .game { width: 45%; min-height:80px; } }
+  #settingsModal input[type="color"],
+  #settingsModal input[type="file"],
+  #settingsModal select,
+  #settingsModal input[type="range"] {
+    width: 100%;
+    margin: 8px 0 15px 0;
+    padding: 8px;
+    border-radius: 8px;
+    border:none;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size:14px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  #settingsModal input[type="file"]::-webkit-file-upload-button {
+    background: #7b1fa2;
+    color:#fff;
+    border:none;
+    padding: 8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    transition: all 0.3s;
+  }
+  #settingsModal button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+    transition: all 0.3s;
+  }
+  #settingsModal #saveSettings {
+    background: linear-gradient(to right, #7b1fa2, #2196f3);
+    color:#fff;
+  }
+  #settingsModal #closeSettings {
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+  }
+  @media(max-width:600px){
+    #searchBar { width: 90%; }
+    .game { width: 45%; min-height:80px; }
+  }
 </style>
 </head>
 <body>
 
 <h1>Portile0Social Games</h1>
 <input type="text" id="searchBar" placeholder="Search games..." onkeyup="filterGames()">
-<p id="EXMU">Use multi-search by typing multiple games separated by commas.<br>Example: Cookie Clicker, Game 2</p>
+<p id="EXMU">Use multi-search by typing multiple games separated by commas.<br>Example: Game 1, Game 2</p>
 
-<div class="game-container" id="gamesList"></div>
+<div class="game-container" id="gamesList">
+  <!-- Games will be loaded from data.json -->
+  <div class="game" onclick="openSettings()"><div class="game-title">Settings</div></div>
+</div>
 
 <script>
-let gamesData = [];
-
-// Fetch data.json
+// Load games from data.json
 async function loadGames() {
   try {
-    const res = await fetch("./games/data.json");
-    gamesData = await res.json();
-    displayGames();
-  } catch(e) {
-    console.error("Failed to load games.json:", e);
+    const res = await fetch("games/data.json");
+    const data = await res.json();
+    const gamesList = document.getElementById("gamesList");
+
+    data.forEach(game => {
+      const div = document.createElement("div");
+      div.className = "game";
+      div.onclick = () => openGame(game.url);
+      div.innerHTML = `<div class="game-title">${game.title}</div>`;
+      gamesList.insertBefore(div, gamesList.querySelector('.game:last-child'));
+    });
+  } catch (err) {
+    console.error("Failed to load games:", err);
   }
 }
 
-// Display games
-function displayGames() {
-  const container = document.getElementById('gamesList');
-  container.innerHTML = "";
-  gamesData.forEach(game => {
-    const div = document.createElement('div');
-    div.className = 'game';
-    div.dataset.name = game.name.toLowerCase();
-    div.innerHTML = `<div class="game-title">${game.name}</div>`;
-    div.onclick = () => openGame(game.url);
-    container.appendChild(div);
-  });
-}
+// ✅ New openGame with <base> injection
+async function openGame(url){
+  const win = window.open("about:blank","_blank");
+  if(!win){
+    alert("Pop-up blocked! Please allow popups.");
+    return;
+  }
 
-// Open game with base href so assets load
-async function openGame(url) {
-  const win = window.open("about:blank", "_blank");
-  if (!win) return alert("Pop-up blocked!");
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error("HTTP " + res.status);
     let html = await res.text();
+
     const baseHref = url.substring(0, url.lastIndexOf("/") + 1);
-    html = `<base href="${baseHref}">` + html;
+    html = html.replace(/<head>/i, `<head><base href="${baseHref}">`);
+
     win.document.open();
     win.document.write(html);
     win.document.close();
-  } catch(err) {
-    console.error(err);
+  } catch (err) {
+    console.error("Failed to load game:", err);
     win.document.write(`<p>Error loading game: ${err.message}</p>`);
     win.document.close();
   }
 }
 
-// Filter games with search
+// Search filter
 function filterGames() {
   const query = document.getElementById('searchBar').value.toLowerCase();
-  const words = query.split(",").map(w => w.trim()).filter(Boolean);
+  const games = document.getElementById('gamesList').getElementsByClassName('game');
+  const words = query.split(",").map(word => word.trim()).filter(Boolean);
   let anyMatch = false;
-  const games = document.querySelectorAll('.game');
-  games.forEach(game => {
-    const name = game.dataset.name;
-    let match = words.length === 0 || words.some(w => name.includes(w));
-    game.style.display = match ? '' : 'none';
-    if(match) anyMatch = true;
-  });
+
+  for (let i = 0; i < games.length; i++) {
+    const title = games[i].querySelector('.game-title').innerText.toLowerCase();
+
+    if (title === "settings") {
+      games[i].style.display = "none";
+      if (words.some(word => word.startsWith("s"))) games[i].style.display = '';
+      continue;
+    }
+
+    let match = words.length === 0 || words.some(word => title.includes(word));
+    games[i].style.display = match ? '' : 'none';
+    if (match) anyMatch = true;
+  }
+
   document.getElementById('noResults')?.remove();
-  if(!anyMatch && words.length>0){
-    const p = document.createElement('p'); p.id="noResults"; p.innerText="No games found!"; document.body.appendChild(p);
+  if (!anyMatch && words.length > 0) {
+    const p = document.createElement('p');
+    p.id = "noResults";
+    p.innerText = "No games found!";
+    document.body.appendChild(p);
   }
 }
 
-// Settings modal
+// (settings code stays the same as before — not removed)
 function openSettings(){
   const modal=document.createElement('div'); modal.id="settingsModal";
   modal.innerHTML=`
@@ -142,7 +271,13 @@ function openSettings(){
 
   const presetSelect=document.getElementById('presetSelect');
   presetSelect.onchange=()=>{
-    const presets={ default:["#560a7f","#230535"], rainy:["#4a148c","#0d47a1"], forest:["#1b5e20","#2e7d32"], ocean:["#006064","#004d40"], beach:["#ff8f00","#f57f17"] };
+    const presets={
+      default:["#560a7f","#230535"],
+      rainy:["#4a148c","#0d47a1"],
+      forest:["#1b5e20","#2e7d32"],
+      ocean:["#006064","#004d40"],
+      beach:["#ff8f00","#f57f17"]
+    };
     if(presetSelect.value in presets){
       document.body.style.background=`linear-gradient(to bottom, ${presets[presetSelect.value][0]}, ${presets[presetSelect.value][1]})`;
     }
@@ -150,8 +285,8 @@ function openSettings(){
 
   const bg1=document.getElementById('bgColor1');
   const bg2=document.getElementById('bgColor2');
-  bg1.addEventListener('input', e=> e.target.value=e.target.value);
-  bg2.addEventListener('input', e=> e.target.value=e.target.value);
+  bg1.addEventListener('input', e=> e.target.value=adjustColor(e.target.value));
+  bg2.addEventListener('input', e=> e.target.value=adjustColor(e.target.value));
 
   document.getElementById('saveSettings').onclick=()=>{
     const c1=bg1.value, c2=bg2.value, file=document.getElementById('bgImage').files[0];
@@ -167,7 +302,16 @@ function openSettings(){
   document.getElementById('closeSettings').onclick=()=>modal.remove();
 }
 
-// Initialize
+function adjustColor(hex){
+  hex=hex.replace("#","");
+  let r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+  const brightness=(r*299+g*587+b*114)/1000;
+  if(brightness>230){ r=Math.max(0,r-20); g=Math.max(0,g-20); b=Math.max(0,b-20);}
+  else if(brightness<25){ r=Math.min(255,r+20); g=Math.min(255,g+20); b=Math.min(255,b+20);}
+  return "#"+r.toString(16).padStart(2,"0")+g.toString(16).padStart(2,"0")+b.toString(16).padStart(2,"0");
+}
+
+// Init
 loadGames();
 </script>
 </body>
