@@ -34,7 +34,7 @@
     color: var(--placeholder-color, rgba(255,255,255,0.6));
     transition: color 0.3s;
   }
-  
+
   /* Multi-search instructions */
   #EXMU {
     margin-bottom: 25px;
@@ -161,16 +161,39 @@
 <input type="text" id="searchBar" placeholder="Search games..." onkeyup="filterGames()">
 <p id="EXMU">Use multi-search by typing multiple games separated by commas.<br>Example: Game 1, Game 2</p>
 
-<div class="game-container" id="gamesList">
-  <div class="game" onclick="openGame('https://vertexiii.github.io/game1.html')"><div class="game-title">Game 1</div></div>
-  <div class="game" onclick="openGame('https://vertexiii.github.io/game2.html')"><div class="game-title">Game 2</div></div>
-  <div class="game" onclick="openGame('https://vertexiii.github.io/game3.html')"><div class="game-title">Game 3</div></div>
-  <div class="game" onclick="openSettings()"><div class="game-title">Settings</div></div>
-</div>
+<div class="game-container" id="gamesList"></div>
 
 <script>
 // Open games
 function openGame(url){ window.open(url,"_blank"); }
+
+// Load games from data.json
+async function loadGames() {
+  try {
+    const res = await fetch("games/data.json");
+    if (!res.ok) throw new Error("Failed to load data.json");
+    const games = await res.json();
+
+    const gamesList = document.getElementById("gamesList");
+    games.forEach(game => {
+      const div = document.createElement("div");
+      div.className = "game";
+      div.setAttribute("onclick", `openGame('${game.url}')`);
+      div.innerHTML = `<div class="game-title">${game.title}</div>`;
+      gamesList.appendChild(div);
+    });
+
+    // Add Settings button
+    const settingsDiv = document.createElement("div");
+    settingsDiv.className = "game";
+    settingsDiv.setAttribute("onclick", "openSettings()");
+    settingsDiv.innerHTML = `<div class="game-title">Settings</div>`;
+    gamesList.appendChild(settingsDiv);
+
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 // Multi-search filter
 function filterGames() {
@@ -185,7 +208,6 @@ function filterGames() {
     // Hide settings by default
     if (title === "settings") {
       games[i].style.display = "none";
-      // Show settings only if query includes "s" or "settings"
       if (words.some(word => word.startsWith("s"))) games[i].style.display = '';
       continue;
     }
@@ -203,7 +225,6 @@ function filterGames() {
     document.body.appendChild(p);
   }
 }
-
 
 // Canvas for text brightness detection
 let canvas, ctx;
@@ -339,6 +360,7 @@ function openSettings(){
 // Initialize
 initCanvas();
 updateTextColor();
+loadGames();
 </script>
 </body>
 </html>
